@@ -1,0 +1,37 @@
+image:
+  repository: your-docker-username/image-resizer
+  tag: "0.1.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 80
+
+env:
+  PORT: "8080"
+  UPLOAD_DIR: "/app/uploads"
+  SIZES: "100,500,1000"
+  MAX_UPLOAD_MB: "10"
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+ingress:
+  enabled: false
+  className: ""
+  hosts:
+    - host: image-resizer.local
+      paths:
+        - path: /
+          pathType: Prefix
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

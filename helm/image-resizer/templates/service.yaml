@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "image-resizer.fullname" . }}
+  labels:
+    app: {{ include "image-resizer.name" . }}
+spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app: {{ include "image-resizer.name" . }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.env.PORT | int }}
+      protocol: TCP
+      name: http

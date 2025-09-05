@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "image-resizer.fullname" . }}
+  labels:
+    app: {{ include "image-resizer.name" . }}
+    chart: {{ include "image-resizer.chart" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "image-resizer.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "image-resizer.name" . }}
+    spec:
+      containers:
+        - name: image-resizer
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.env.PORT | int }}
+          env:
+            - name: PORT
+              value: {{ .Values.env.PORT | quote }}
+            - name: UPLOAD_DIR
+              value: {{ .Values.env.UPLOAD_DIR | quote }}
+            - name: SIZES
+              value: {{ .Values.env.SIZES | quote }}
+            - name: MAX_UPLOAD_MB
+              value: {{ .Values.env.MAX_UPLOAD_MB | quote }}
+          volumeMounts:
+            - name: uploads
+              mountPath: {{ .Values.env.UPLOAD_DIR | quote }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: uploads
+          emptyDir: {}

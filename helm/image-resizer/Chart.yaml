@@ -1,0 +1,6 @@
+apiVersion: v2
+name: image-resizer
+description: A simple Golang image resizer service
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
